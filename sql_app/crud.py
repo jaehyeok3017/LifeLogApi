@@ -6,6 +6,9 @@ from . import models, schemas
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
+def get_user(db: Session, user_id: int):
+    return db.query(models.User).filter(models.User.id == user_id).first()
+
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
@@ -27,7 +30,7 @@ def get_todo_by_email(db: Session, email: str, skip: int = 0, limit: int = 100):
     return db.query(models.Todo).filter(models.Todo.owner_email == email).offset(skip).limit(limit).all()
 
 # Create : todo
-def create_user_todo(db: Session, todo: schemas.TodoCreate, user_id: int):
+def create_user_todo(db: Session, todo: schemas.Todo, user_id: int):
     db_todo = models.Todo(**todo.dict(), owner_id=user_id)
     db.add(db_todo)
     db.commit()
@@ -43,7 +46,7 @@ def get_post_by_email(db: Session, email: str, skip: int = 0, limit: int = 100):
     return db.query(models.Post).filter(models.Post.owner_email == email).offset(skip).limit(limit).all()
 
 # Create : post
-def create_user_post(db: Session, post: schemas.PostCreate, user_id: int):
+def create_user_post(db: Session, post: schemas.Post, user_id: int):
     db_post = models.Post(**post.dict(), owner_id=user_id)
     db.add(db_post)
     db.commit()
